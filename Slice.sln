@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Slice", "Slice\Slice.csproj", "{3E37F4BA-F8AF-4E2D-8C7A-F1F292895B1D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SliceTest", "SliceTest\SliceTest.csproj", "{CCF3EB82-9DFD-4C7E-9865-8A4A15E235C5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3E37F4BA-F8AF-4E2D-8C7A-F1F292895B1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E37F4BA-F8AF-4E2D-8C7A-F1F292895B1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E37F4BA-F8AF-4E2D-8C7A-F1F292895B1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E37F4BA-F8AF-4E2D-8C7A-F1F292895B1D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCF3EB82-9DFD-4C7E-9865-8A4A15E235C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCF3EB82-9DFD-4C7E-9865-8A4A15E235C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCF3EB82-9DFD-4C7E-9865-8A4A15E235C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCF3EB82-9DFD-4C7E-9865-8A4A15E235C5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
