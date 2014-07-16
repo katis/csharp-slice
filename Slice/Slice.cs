@@ -96,18 +96,8 @@ namespace Katis.Data
         /// <returns>Item at index i</returns>
         public T this[int i]
         {
-            get
-            {
-                Contract.Requires(i >= 0);
-                Contract.Requires(i < Count);
-                return array[i + offset];
-            }
-            set
-            {
-                Contract.Requires(i < Count);
-                Contract.Requires(i >= 0);
-                array[i + offset] = value;
-            }
+            get { return array[i + offset]; }
+            set { array[i + offset] = value; }
         }
 
         /// <summary>
@@ -200,6 +190,18 @@ namespace Katis.Data
             return slice;
         }
 
+        /// <summary>
+        /// Returns the slice contents as an array.
+        /// Only copies if the slice points only to a part of the array.
+        /// </summary>
+        public T[] ToArray()
+        {
+            if (offset == 0 && len == array.Length) return array;
+            var a = new T[Count];
+            Array.Copy(array, offset, a, 0, a.Length);
+            return a;
+        }
+
         #region IEnumerable<T>
 
         public IEnumerator<T> GetEnumerator()
@@ -262,7 +264,6 @@ namespace Katis.Data
         /// <param name="arrayIndex"></param>
         void ICollection<T>.CopyTo(T[] arr, int arrayIndex)
         {
-            Contract.Requires(Count <= arr.Length - arrayIndex);
             Array.Copy(array, offset, arr, arrayIndex, Count);
         }
 
