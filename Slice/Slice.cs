@@ -18,11 +18,11 @@ namespace Katis.Data
     /// Slice is a wrapper around Array that can point to a part of it and can be resliced
     /// to create a new slice which points to a part of the same data as the original slice.
     /// </summary>
-    public sealed class Slice<T> : IList<T>
+    public struct Slice<T> : IList<T>
     {
-        internal T[] array;
-        internal int offset;
-        internal int len;
+        internal readonly T[] array;
+        internal readonly int offset;
+        internal readonly int len;
 
         /// <summary>
         /// Returns the maximum capacity of the slice.
@@ -72,6 +72,22 @@ namespace Katis.Data
             {
                 this.len = to - from;
             }
+        }
+
+        public static bool operator ==(Slice<T> a, Slice<T> b)
+        {
+            if (a.Count != b.Count) return false;
+
+            for (int i = 0; i < a.Count; i++)
+            {
+                if (!a[i].Equals(b[i])) return false;
+            }
+            return true;
+        }
+
+        public static bool operator !=(Slice<T> a, Slice<T> b)
+        {
+            return !(a == b);
         }
 
         /// <summary>
@@ -139,16 +155,16 @@ namespace Katis.Data
         /// <param name="slice">Slice to append to this slice.</param>
         public Slice<T> Append(Slice<T> slice)
         {
-            Contract.Requires(slice != null);
             int size = this.Count;
-            int newsize = this.Count + slice.Count;
+            int newlen = this.Count + slice.Count;
             var newarr = this.array;
-            if (newsize > array.Length)
+            if (newlen > Count)
             {
-                Array.Resize(ref newarr, newsize);
+                int newcap = (newlen <= 1024) ? newlen * 2 : (int)((float)newlen * 1.25f);
+                Array.Resize(ref newarr, newcap);
             }
             Array.Copy(slice.array, slice.offset, newarr, this.Count, slice.len);
-            return new Slice<T>(newarr, 0, newsize);
+            return new Slice<T>(newarr, 0, newlen);
         }
 
         /// <summary>
@@ -167,7 +183,6 @@ namespace Katis.Data
         /// <returns>The items copied</returns>
         public int CopyTo(Slice<T> dst)
         {
-            Contract.Requires(dst != null);
             var len = Math.Min(Count, dst.Count);
             Array.Copy(array, offset, dst.array, dst.offset, len);
             return len;
@@ -213,20 +228,19 @@ namespace Katis.Data
         }
 
         /// <summary>
-        /// Add an item to the end of the slice.
+        /// Not supported!
         /// </summary>
-        public void Add(T item)
+        void ICollection<T>.Add(T item)
         {
-            Insert(Count, item);
+            throw new NotSupportedException();
         }
 
         /// <summary>
-        /// Clears the array and sets it's count to zero.
+        /// Not supported!
         /// </summary>
-        public void Clear()
+        void ICollection<T>.Clear()
         {
-            Array.Clear(array, offset, len);
-            this.len = 0;
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -236,10 +250,7 @@ namespace Katis.Data
         {
             foreach (T i in this)
             {
-                if (i.Equals(item))
-                {
-                    return true;
-                }
+                if (i.Equals(item)) return true;
             }
             return false;
         }
@@ -249,28 +260,23 @@ namespace Katis.Data
         /// </summary>
         /// <param name="arr"></param>
         /// <param name="arrayIndex"></param>
-        public void CopyTo(T[] arr, int arrayIndex)
+        void ICollection<T>.CopyTo(T[] arr, int arrayIndex)
         {
-            if (Count > arr.Length - arrayIndex) throw new ArgumentException("No room in the provided array");
+            Contract.Requires(Count <= arr.Length - arrayIndex);
             Array.Copy(array, offset, arr, arrayIndex, Count);
         }
 
-        public bool IsReadOnly
+        bool ICollection<T>.IsReadOnly
         {
             get { return false; }
         }
 
         /// <summary>
-        /// Removes the provided item from the slice if it exists.
+        /// Not supported!
         /// </summary>
-        /// <returns>True if the item was removed.</returns>
-        public bool Remove(T item)
+        bool ICollection<T>.Remove(T item)
         {
-            int foundi = IndexOf(item);
-            if (foundi == -1) return false;
-
-            RemoveAt(foundi);
-            return true;
+            throw new NotSupportedException();
         }
 
         #endregion ICollection<T>
@@ -293,43 +299,19 @@ namespace Katis.Data
         }
 
         /// <summary>
-        /// Insert a new item to the provided index.
+        /// Not supported!
         /// </summary>
-        public void Insert(int index, T item)
+        void IList<T>.Insert(int index, T item)
         {
-            Contract.Requires<IndexOutOfRangeException>(index >= 0);
-            Contract.Requires<IndexOutOfRangeException>(index <= Count);
-
-            var newarr = new T[Count + 1];
-
-            if (index != 0)
-            {
-                Array.Copy(array, offset, newarr, 0, index);
-            }
-            newarr[index] = item;
-            if (index < Count)
-            {
-                Array.Copy(array, offset + index, newarr, index + 1, newarr.Length - 1 - index);
-            }
-            this.array = newarr;
-            this.offset = 0;
-            this.len = array.Length;
+            throw new NotSupportedException();
         }
 
         /// <summary>
-        /// Removes an item at the provided index index.
+        /// Not supported!
         /// </summary>
-        public void RemoveAt(int index)
+        void IList<T>.RemoveAt(int index)
         {
-            Contract.Requires<IndexOutOfRangeException>(index >= 0);
-            Contract.Requires<IndexOutOfRangeException>(index < Count);
-
-            var newarr = new T[Count - 1];
-            Array.Copy(array, offset, newarr, 0, index);
-            Array.Copy(array, offset + index + 1, newarr, index, newarr.Length - index);
-            this.array = newarr;
-            this.offset = 0;
-            this.len = newarr.Length;
+            throw new NotSupportedException();
         }
 
         #endregion IList<T>
@@ -339,19 +321,16 @@ namespace Katis.Data
         public override bool Equals(object obj)
         {
             if (obj == null) return false;
-            return Equals(obj as Slice<T>);
+            if (obj is Slice<T>)
+            {
+                return this == (Slice<T>)obj;
+            }
+            return false;
         }
 
         public bool Equals(Slice<T> s)
         {
-            if (s == null) return false;
-            if (s.Count != this.Count) return false;
-
-            for (int i = 0; i < Count; i++)
-            {
-                if (!this[i].Equals(s[i])) return false;
-            }
-            return true;
+            return this == s;
         }
 
         public override int GetHashCode()
@@ -420,7 +399,6 @@ namespace Katis.Data
         public static Task<int> ReadAsync(this Stream stream, Slice<byte> slice)
         {
             Contract.Requires(stream != null);
-            Contract.Requires(slice != null);
             return stream.ReadAsync(slice.array, slice.offset, slice.len);
         }
 
@@ -430,7 +408,6 @@ namespace Katis.Data
         public static Task WriteAsync(this Stream stream, Slice<byte> slice)
         {
             Contract.Requires(stream != null);
-            Contract.Requires(slice != null);
             return stream.WriteAsync(slice.array, slice.offset, slice.len);
         }
 
@@ -445,7 +422,6 @@ namespace Katis.Data
         /// <returns>Number of bytes read</returns>
         public static int ReadWith(this Slice<byte> slice, Func<byte[], int, int, int> readf)
         {
-            Contract.Requires(slice != null);
             Contract.Requires(readf != null);
             return readf(slice.array, slice.offset, slice.len);
         }
@@ -461,7 +437,6 @@ namespace Katis.Data
         /// </param>
         public static void WriteWith(this Slice<byte> slice, Action<byte[], int, int> writef)
         {
-            Contract.Requires(slice != null);
             Contract.Requires(writef != null);
             writef(slice.array, slice.offset, slice.len);
         }
@@ -477,7 +452,6 @@ namespace Katis.Data
         /// <returns>Task with number of bytes read.</returns>
         public static Task<int> ReadAsyncWith(this Slice<byte> slice, Func<byte[], int, int, Task<int>> readf)
         {
-            Contract.Requires(slice != null);
             Contract.Requires(readf != null);
             return readf(slice.array, slice.offset, slice.len);
         }
@@ -494,7 +468,6 @@ namespace Katis.Data
         /// <returns>Task that completes when the write operation finishes.</returns>
         public static Task WriteAsyncWith(this Slice<byte> slice, Func<byte[], int, int, Task> writef)
         {
-            Contract.Requires(slice != null);
             Contract.Requires(writef != null);
             return writef(slice.array, slice.offset, slice.len);
         }

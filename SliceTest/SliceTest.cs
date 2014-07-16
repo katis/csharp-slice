@@ -30,8 +30,11 @@ namespace SliceTest
         {
             var s1 = Ten();
             var s2 = Ten();
+            var five = Five();
             Assert.IsTrue(s1.Equals(s2));
-            Assert.IsFalse(s1 == s2);
+            Assert.IsFalse(s1.Equals(five));
+            Assert.IsTrue(s1 == s2);
+            Assert.IsFalse(s1 == five);
         }
 
         [TestMethod]
@@ -89,7 +92,6 @@ namespace SliceTest
             var res3 = Slice.Make(0, 1, 2, 3, 4, 0, 1, 2, 3, 4);
             Assert.AreEqual(s, res3);
             Assert.IsTrue(s.Count == 10);
-            Assert.IsTrue(s.Capacity == 10);
         }
 
         [TestMethod]
@@ -142,70 +144,12 @@ namespace SliceTest
         }
 
         [TestMethod]
-        public void TestAdd()
-        {
-            var s = Five();
-            s.Add(99);
-            Assert.AreEqual(Slice.Make(0, 1, 2, 3, 4, 99), s);
-
-            s = Zero();
-            s.Add(99);
-            Assert.AreEqual(Slice.Make(99), s);
-        }
-
-        [TestMethod]
-        public void TestRemove()
-        {
-            var s = Five();
-            s.Remove(2);
-            Assert.AreEqual(Slice.Make(0, 1, 3, 4), s);
-        }
-
-        [TestMethod]
         public void TestIndexOf()
         {
             var s = Five();
             Assert.AreEqual(s.IndexOf(0), 0);
             Assert.AreEqual(s.IndexOf(4), 4);
             Assert.AreEqual(s.IndexOf(99), -1);
-        }
-
-        [TestMethod]
-        public void TestInsert()
-        {
-            var s = Five();
-            s.Insert(2, 99);
-            Trace.WriteLine(s);
-            Assert.AreEqual(Slice.Make(0, 1, 99, 2, 3, 4), s);
-
-            s = Five();
-            s.Insert(0, 99);
-            Trace.WriteLine(s);
-            Assert.AreEqual(Slice.Make(99, 0, 1, 2, 3, 4), s);
-
-            s = Five();
-            s.Insert(5, 99);
-            Trace.WriteLine(s);
-            Assert.AreEqual(Slice.Make(0, 1, 2, 3, 4, 99), s);
-        }
-
-        [TestMethod]
-        public void TestRemoveAt()
-        {
-            var s = Five();
-            s.RemoveAt(2);
-            Trace.WriteLine(s);
-            Assert.AreEqual(Slice.Make(0, 1, 3, 4), s);
-
-            s = Five();
-            s.RemoveAt(0);
-            Trace.WriteLine(s);
-            Assert.AreEqual(Slice.Make(1, 2, 3, 4), s);
-
-            s = Five();
-            s.RemoveAt(4);
-            Trace.WriteLine(s);
-            Assert.AreEqual(Slice.Make(0, 1, 2, 3), s);
         }
 
         [TestMethod]
