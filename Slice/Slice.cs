@@ -158,9 +158,9 @@ namespace Katis.Data
             int size = this.Count;
             int newlen = this.Count + slice.Count;
             var newarr = this.array;
-            if (newlen > Count)
+            if (newlen > Capacity)
             {
-                int newcap = (newlen <= 1024) ? newlen * 2 : (int)((float)newlen * 1.25f);
+                int newcap = newlen * 2;
                 Array.Resize(ref newarr, newcap);
             }
             Array.Copy(slice.array, slice.offset, newarr, this.Count, slice.len);

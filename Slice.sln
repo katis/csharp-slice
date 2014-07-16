@@ -5,6 +5,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Slice", "Slice\Slice.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SliceTest", "SliceTest\SliceTest.csproj", "{CCF3EB82-9DFD-4C7E-9865-8A4A15E235C5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SliceBenchmark", "SliceBenchmark\SliceBenchmark.csproj", "{D8F14A7E-1DD4-4D79-9D8C-3E96C5C590F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SliceBenchmarkRunner", "SliceBenchmarkRunner\SliceBenchmarkRunner.csproj", "{AC666386-CCF9-4C64-9967-53C53849ABEB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +23,14 @@ Global
 		{CCF3EB82-9DFD-4C7E-9865-8A4A15E235C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CCF3EB82-9DFD-4C7E-9865-8A4A15E235C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CCF3EB82-9DFD-4C7E-9865-8A4A15E235C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8F14A7E-1DD4-4D79-9D8C-3E96C5C590F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8F14A7E-1DD4-4D79-9D8C-3E96C5C590F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8F14A7E-1DD4-4D79-9D8C-3E96C5C590F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8F14A7E-1DD4-4D79-9D8C-3E96C5C590F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC666386-CCF9-4C64-9967-53C53849ABEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC666386-CCF9-4C64-9967-53C53849ABEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC666386-CCF9-4C64-9967-53C53849ABEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC666386-CCF9-4C64-9967-53C53849ABEB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
