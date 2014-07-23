@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -48,7 +47,7 @@ namespace Katis.Data
         /// <param name="cap">Maximum capacity of the slice</param>
         public Slice(int len, int cap)
         {
-            Contract.Requires(cap >= len);
+            if (cap < len) throw new IndexOutOfRangeException("Slice capacity must not be longer than length.");
             this.array = new T[cap];
             this.offset = 0;
             this.len = len;
@@ -60,8 +59,8 @@ namespace Katis.Data
         /// </summary>
         public Slice(T[] array, int from, int to)
         {
-            Contract.Requires(array != null);
-            Contract.Requires(array.Length >= to);
+            if (array == null) throw new ArgumentNullException("Slice method argument array was null");
+            if (array.Length < to) throw new ArgumentOutOfRangeException("Slice to-index must not be larger than the length of the array.");
             this.array = array;
             this.offset = from;
             if (to < 0)
@@ -109,8 +108,8 @@ namespace Katis.Data
         {
             get
             {
-                Contract.Requires(from >= 0);
-                Contract.Requires(from <= Capacity);
+                if (from < 0) throw new ArgumentOutOfRangeException("Slice from-argument must be larger than 0");
+                if (from > Capacity) throw new ArgumentOutOfRangeException("Slice to-argument must be larger than the capacity of the slice");
                 return new Slice<T>(array, from + this.offset, this.offset + to);
             }
         }
@@ -127,11 +126,12 @@ namespace Katis.Data
         {
             get
             {
-                Contract.Requires(from >= 0);
+                if (from < 0) throw new ArgumentOutOfRangeException("Slice from-argument must not be below zero.");
                 switch (to)
                 {
                     case SliceTo.End:
                         return new Slice<T>(array, from + this.offset, this.len + this.offset);
+
                     case SliceTo.Full:
                         return new Slice<T>(array, from + this.offset, array.Length - from - this.offset);
                 }
@@ -162,7 +162,7 @@ namespace Katis.Data
         /// </summary>
         public Slice<T> Append(params T[] items)
         {
-            Contract.Requires(items != null);
+            if (items == null) throw new ArgumentNullException("Slice method argument items was null");
             return this.Append(Slice.Make(items));
         }
 
@@ -379,7 +379,7 @@ namespace Katis.Data
         /// </summary>
         public static Slice<T> Make<T>(params T[] items)
         {
-            Contract.Requires(items != null);
+            if (items == null) throw new ArgumentNullException("Slice method argument items was null");
             return new Slice<T>(items, 0, items.Length);
         }
 
@@ -388,28 +388,9 @@ namespace Katis.Data
         /// </summary>
         public static Slice<T> ToSlice<T>(this IEnumerable<T> e)
         {
-            Contract.Requires(e != null);
+            if (e == null) throw new ArgumentNullException("Slice method argument e was null");
             var arr = e.ToArray<T>();
             return new Slice<T>(arr, 0, arr.Length);
-        }
-
-        /// <summary>
-        /// Asynchronously Reads slice.Count bytes from the stream.
-        /// </summary>
-        /// <returns>Bytes read</returns>
-        public static Task<int> ReadAsync(this Stream stream, Slice<byte> slice)
-        {
-            Contract.Requires(stream != null);
-            return stream.ReadAsync(slice.array, slice.offset, slice.len);
-        }
-
-        /// <summary>
-        /// Writes slice.Count bytes to the stream asynchronously.
-        /// </summary>
-        public static Task WriteAsync(this Stream stream, Slice<byte> slice)
-        {
-            Contract.Requires(stream != null);
-            return stream.WriteAsync(slice.array, slice.offset, slice.len);
         }
 
         /// <summary>
@@ -423,7 +404,7 @@ namespace Katis.Data
         /// <returns>Number of bytes read</returns>
         public static int ReadWith(this Slice<byte> slice, Func<byte[], int, int, int> readf)
         {
-            Contract.Requires(readf != null);
+            if (readf == null) throw new ArgumentNullException("Slice method argument readf was null");
             return readf(slice.array, slice.offset, slice.len);
         }
 
@@ -438,7 +419,7 @@ namespace Katis.Data
         /// </param>
         public static void WriteWith(this Slice<byte> slice, Action<byte[], int, int> writef)
         {
-            Contract.Requires(writef != null);
+            if (writef == null) throw new ArgumentNullException("Slice method argument writef was null");
             writef(slice.array, slice.offset, slice.len);
         }
 
@@ -453,7 +434,7 @@ namespace Katis.Data
         /// <returns>Task with number of bytes read.</returns>
         public static Task<int> ReadAsyncWith(this Slice<byte> slice, Func<byte[], int, int, Task<int>> readf)
         {
-            Contract.Requires(readf != null);
+            if (readf == null) throw new ArgumentNullException("Slice method argument readf was null");
             return readf(slice.array, slice.offset, slice.len);
         }
 
@@ -469,7 +450,7 @@ namespace Katis.Data
         /// <returns>Task that completes when the write operation finishes.</returns>
         public static Task WriteAsyncWith(this Slice<byte> slice, Func<byte[], int, int, Task> writef)
         {
-            Contract.Requires(writef != null);
+            if (writef == null) throw new ArgumentNullException("Slice method argument writef was null");
             return writef(slice.array, slice.offset, slice.len);
         }
     }
