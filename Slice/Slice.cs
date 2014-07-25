@@ -202,6 +202,14 @@ namespace Katis.Data
             return a;
         }
 
+        /// <summary>
+        /// Returns an array segment pointing to the same portion of the same array.
+        /// </summary>
+        public ArraySegment<T> ToArraySegment()
+        {
+            return new ArraySegment<T>(array, offset, Count);
+        }
+
         #region IEnumerable<T>
 
         public IEnumerator<T> GetEnumerator()
