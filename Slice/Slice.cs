@@ -402,6 +402,40 @@ namespace Katis.Data
         }
 
         /// <summary>
+        /// Calls the target function with the slices internal array, offset and count,
+        /// returning the result of the function.
+        /// </summary>
+        public static R With<T, R>(Slice<T> slice, Func<T[], int, int, R> target)
+        {
+            return target(slice.array, slice.offset, slice.Count);
+        }
+
+        /// <summary>
+        /// Calls the target function with the slices internal array and offset,
+        /// returning the result of the function.
+        /// </summary>
+        public static R With<T, R>(Slice<T> slice, Func<T[], int, R> target)
+        {
+            return target(slice.array, slice.offset);
+        }
+
+        /// <summary>
+        /// Calls the target action with the slices internal array, offset and count.
+        /// </summary>
+        public static void With<T>(Slice<T> slice, Action<T[], int, int> target)
+        {
+            target(slice.array, slice.offset, slice.Count);
+        }
+
+        /// <summary>
+        /// Calls the target action with the slices internal array and offset.
+        /// </summary>
+        public static void With<T>(Slice<T> slice, Action<T[], int> target)
+        {
+            target(slice.array, slice.offset);
+        }
+
+        /// <summary>
         /// Read bytes to the slice using the provided reader function.
         /// </summary>
         /// <param name="readf">
