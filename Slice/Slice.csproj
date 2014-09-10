@@ -115,6 +115,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ReadonlySlice.cs" />
     <Compile Include="Slice.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

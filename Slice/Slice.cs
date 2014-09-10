@@ -191,6 +191,15 @@ namespace Katis.Data
         }
 
         /// <summary>
+        /// Converts the slice to an unmodifiable read-only slice.
+        /// </summary>
+        public ReadonlySlice<T> AsReadonly()
+        {
+            return new ReadonlySlice<T>(this);
+        }
+        
+
+        /// <summary>
         /// Returns the slice contents as an array.
         /// Only copies if the slice points only to a part of the array.
         /// </summary>
@@ -366,7 +375,6 @@ namespace Katis.Data
             sb.Append(']');
             return sb.ToString();
         }
-
         #endregion object overrides
     }
 
