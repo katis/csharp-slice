@@ -197,7 +197,6 @@ namespace Katis.Data
         {
             return new ReadonlySlice<T>(this);
         }
-        
 
         /// <summary>
         /// Returns the slice contents as an array.
@@ -441,67 +440,6 @@ namespace Katis.Data
         public static void With<T>(Slice<T> slice, Action<T[], int> target)
         {
             target(slice.array, slice.offset);
-        }
-
-        /// <summary>
-        /// Read bytes to the slice using the provided reader function.
-        /// </summary>
-        /// <param name="readf">
-        ///     Reader function taking a byte array,
-        ///     offset from the beginning of the array and length to read to the array.
-        ///     Returns number of bytes read.
-        /// </param>
-        /// <returns>Number of bytes read</returns>
-        public static int ReadWith(this Slice<byte> slice, Func<byte[], int, int, int> readf)
-        {
-            if (readf == null) throw new ArgumentNullException("Slice method argument readf was null");
-            return readf(slice.array, slice.offset, slice.len);
-        }
-
-        /// <summary>
-        /// Write slice.Count bytes to the provided writer function.
-        /// </summary>
-        /// <param name="slice"></param>
-        /// <param name="writef">
-        ///     Writer function that takes a byte array,
-        ///     offset from the beginning of the array and
-        ///     number of bytes to write.
-        /// </param>
-        public static void WriteWith(this Slice<byte> slice, Action<byte[], int, int> writef)
-        {
-            if (writef == null) throw new ArgumentNullException("Slice method argument writef was null");
-            writef(slice.array, slice.offset, slice.len);
-        }
-
-        /// <summary>
-        /// Read bytes to the slice using the provided asynchronous reader function.
-        /// </summary>
-        /// <param name="readf">
-        ///     Reader function taking a byte array,
-        ///     offset from the beginning of the array and length to read to the array.
-        ///     Returns a task containing the number of bytes read.
-        /// </param>
-        /// <returns>Task with number of bytes read.</returns>
-        public static Task<int> ReadAsyncWith(this Slice<byte> slice, Func<byte[], int, int, Task<int>> readf)
-        {
-            if (readf == null) throw new ArgumentNullException("Slice method argument readf was null");
-            return readf(slice.array, slice.offset, slice.len);
-        }
-
-        /// <summary>
-        /// Write slice.Count bytes to the provided asynchronous writer function.
-        /// </summary>
-        /// <param name="writef">
-        ///     Writer function that takes a byte array,
-        ///     offset from the beginning of the array and
-        ///     number of bytes to write.
-        ///     Returns a task that is completed when the write operation finishes.
-        /// </param>
-        /// <returns>Task that completes when the write operation finishes.</returns>
-        public static Task WriteAsyncWith(this Slice<byte> slice, Func<byte[], int, int, Task> writef)
-        {
-            if (writef == null) throw new ArgumentNullException("Slice method argument writef was null");
-            return writef(slice.array, slice.offset, slice.len);
         }
     }
 }
